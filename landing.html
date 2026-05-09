@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#0a0a0a"/>
+<meta name="description" content="RotinAI — Organize sua rotina com inteligência artificial. Tarefas, hábitos e produtividade num só lugar. Apenas R$9,90/mês."/>
+<meta property="og:title" content="RotinAI — Sua rotina com IA"/>
+<meta property="og:description" content="Organize seu dia em 2 minutos. Tarefas, hábitos e relatório de produtividade com IA."/>
+<meta property="og:type" content="website"/>
+<title>RotinAI — Sua rotina com inteligência</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,600;1,9..144,200;1,9..144,300&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--bg4:#222;
+  --border:#222;--border2:#2e2e2e;
+  --text:#f0ece6;--text2:#777;--text3:#3a3a3a;
+  --accent:#c8f060;--accent2:#a8d040;
+  --gold:#e8c840;--coral:#ff6b4a;--blue:#4a9eff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(20px);background:#0a0a0a99;border-bottom:1px solid #ffffff08;}
+.nav-logo{font-family:'Fraunces',serif;font-size:20px;font-weight:300;letter-spacing:-0.5px;}
+.nav-logo span{color:var(--accent);}
+.nav-cta{height:36px;padding:0 18px;border-radius:99px;border:none;background:var(--accent);color:#0a0a0a;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;display:flex;align-items:center;}
+.nav-cta:hover{background:var(--accent2);}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 24px 80px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:20%;left:50%;transform:translateX(-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,#c8f06012 0%,transparent 70%);pointer-events:none;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:#c8f06012;border:1px solid #c8f06033;color:var(--accent);font-family:'DM Mono',monospace;font-size:11px;padding:5px 14px;border-radius:99px;margin-bottom:28px;letter-spacing:.5px;}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+h1{font-family:'Fraunces',serif;font-size:clamp(40px,8vw,72px);font-weight:200;letter-spacing:-2px;line-height:1.05;margin-bottom:24px;max-width:700px;}
+h1 em{font-style:italic;color:var(--accent);}
+.hero-sub{font-size:clamp(15px,2vw,18px);color:var(--text2);max-width:480px;line-height:1.7;margin-bottom:40px;}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-primary{height:52px;padding:0 28px;border-radius:99px;border:none;background:var(--accent);color:#0a0a0a;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .2s;}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-1px);}
+.btn-secondary{height:52px;padding:0 28px;border-radius:99px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:15px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .2s;}
+.btn-secondary:hover{border-color:#555;color:var(--text);}
+.hero-social{margin-top:48px;display:flex;align-items:center;gap:16px;color:var(--text3);font-size:13px;}
+.hero-social-avatars{display:flex;}
+.avatar-sm{width:28px;height:28px;border-radius:50%;background:var(--bg3);border:2px solid var(--bg);margin-left:-8px;display:flex;align-items:center;justify-content:center;font-size:11px;}
+
+/* PHONE MOCKUP */
+.phone-wrap{margin:60px auto 0;max-width:320px;position:relative;}
+.phone{background:var(--bg2);border:1px solid var(--border2);border-radius:36px;padding:16px;box-shadow:0 40px 80px #000a,0 0 0 1px #ffffff08;overflow:hidden;}
+.phone-notch{width:80px;height:24px;background:var(--bg);border-radius:99px;margin:0 auto 16px;}
+.phone-screen{background:var(--bg);border-radius:24px;overflow:hidden;}
+.phone-inner{padding:16px;}
+.p-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.p-greeting{font-family:'Fraunces',serif;font-size:18px;font-weight:300;letter-spacing:-0.5px;}
+.p-greeting em{color:var(--accent);font-style:italic;}
+.p-date{font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);margin-top:2px;}
+.p-avatar{width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:12px;}
+.p-banner{background:linear-gradient(135deg,#1a2a0a,#0d1a0d);border:1px solid #c8f06022;border-radius:12px;padding:10px 12px;margin-bottom:12px;}
+.p-banner-label{font-family:'DM Mono',monospace;font-size:8px;color:var(--accent);opacity:.7;margin-bottom:3px;}
+.p-banner-text{font-size:11px;color:var(--text);line-height:1.4;}
+.p-banner-text b{color:var(--accent);}
+.p-section{font-family:'DM Mono',monospace;font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px;}
+.p-task{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-bottom:5px;display:flex;align-items:center;gap:8px;}
+.p-check{width:14px;height:14px;border-radius:4px;border:1.5px solid var(--border2);flex-shrink:0;}
+.p-check.done{background:var(--accent);border-color:var(--accent);}
+.p-task-text{font-size:11px;flex:1;}
+.p-task-text.done{text-decoration:line-through;color:var(--text3);}
+.p-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.p-habits{display:flex;gap:6px;}
+.p-habit{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:7px 6px;text-align:center;flex:1;}
+.p-habit-em{font-size:16px;}
+.p-habit-name{font-size:8px;color:var(--text2);margin-top:2px;}
+.p-habit-streak{font-family:'DM Mono',monospace;font-size:8px;color:var(--accent);}
+
+/* FEATURES */
+.features{padding:100px 24px;max-width:1000px;margin:0 auto;}
+.section-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:2px;text-align:center;margin-bottom:16px;}
+h2{font-family:'Fraunces',serif;font-size:clamp(32px,5vw,52px);font-weight:200;letter-spacing:-1.5px;text-align:center;margin-bottom:60px;line-height:1.1;}
+h2 em{font-style:italic;color:var(--accent);}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
+.feature-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:24px;transition:border-color .2s;}
+.feature-card:hover{border-color:var(--border2);}
+.feature-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px;}
+.fi-green{background:#c8f06015;border:1px solid #c8f06022;}
+.fi-coral{background:#ff6b4a15;border:1px solid #ff6b4a22;}
+.fi-blue{background:#4a9eff15;border:1px solid #4a9eff22;}
+.fi-gold{background:#e8c84015;border:1px solid #e8c84022;}
+.feature-title{font-size:16px;font-weight:500;margin-bottom:8px;}
+.feature-text{font-size:14px;color:var(--text2);line-height:1.6;}
+.feature-pro{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);margin-top:10px;display:inline-block;background:#e8c84012;border:1px solid #e8c84033;padding:2px 8px;border-radius:99px;}
+
+/* HOW */
+.how{padding:100px 24px;max-width:700px;margin:0 auto;text-align:center;}
+.steps{display:flex;flex-direction:column;gap:0;margin-top:48px;text-align:left;}
+.step{display:flex;gap:20px;align-items:flex-start;padding-bottom:32px;position:relative;}
+.step:not(:last-child)::before{content:'';position:absolute;left:19px;top:44px;width:2px;bottom:0;background:linear-gradient(to bottom,var(--border2),transparent);}
+.step-num{width:40px;height:40px;border-radius:12px;background:var(--bg2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--accent);flex-shrink:0;}
+.step-body h3{font-size:16px;font-weight:500;margin-bottom:6px;}
+.step-body p{font-size:14px;color:var(--text2);line-height:1.6;}
+
+/* PRICING */
+.pricing{padding:100px 24px;max-width:800px;margin:0 auto;text-align:center;}
+.pricing-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:48px;}
+.price-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:28px;text-align:left;transition:all .2s;position:relative;}
+.price-card.featured{border-color:#c8f06044;background:linear-gradient(135deg,#1a2a0a,#0d1a0d);}
+.price-card.featured::before{content:'Mais popular';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:#0a0a0a;font-family:'DM Mono',monospace;font-size:10px;padding:3px 14px;border-radius:99px;white-space:nowrap;font-weight:500;}
+.price-name{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.price-value{font-family:'Fraunces',serif;font-size:44px;font-weight:300;letter-spacing:-2px;margin-bottom:4px;}
+.price-value sup{font-size:18px;vertical-align:top;margin-top:8px;}
+.price-value.accent{color:var(--accent);}
+.price-period{font-size:13px;color:var(--text2);margin-bottom:20px;}
+.price-features{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.pf{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);}
+.pf-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+.pf.off .pf-dot{background:var(--text3);}
+.pf.off{color:var(--text3);}
+.price-btn{width:100%;height:46px;border-radius:12px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;transition:all .2s;text-decoration:none;display:flex;align-items:center;justify-content:center;}
+.price-btn:hover{background:var(--bg3);color:var(--text);}
+.price-btn.accent-btn{background:var(--accent);color:#0a0a0a;border-color:var(--accent);}
+.price-btn.accent-btn:hover{background:var(--accent2);}
+
+/* TESTIMONIALS */
+.testimonials{padding:100px 24px;max-width:900px;margin:0 auto;}
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:48px;}
+.testi-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px;}
+.testi-stars{color:var(--gold);font-size:13px;margin-bottom:10px;letter-spacing:2px;}
+.testi-text{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:14px;font-style:italic;}
+.testi-author{display:flex;align-items:center;gap:10px;}
+.testi-avatar{width:32px;height:32px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:13px;}
+.testi-name{font-size:13px;font-weight:500;}
+.testi-role{font-size:11px;color:var(--text3);}
+
+/* FAQ */
+.faq{padding:100px 24px;max-width:600px;margin:0 auto;}
+.faq-item{border-bottom:1px solid var(--border);padding:20px 0;cursor:pointer;}
+.faq-q{display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:500;}
+.faq-arrow{color:var(--text3);font-size:18px;transition:transform .2s;}
+.faq-item.open .faq-arrow{transform:rotate(45deg);}
+.faq-a{font-size:14px;color:var(--text2);line-height:1.7;max-height:0;overflow:hidden;transition:all .3s;margin-top:0;}
+.faq-item.open .faq-a{max-height:200px;margin-top:12px;}
+
+/* CTA FINAL */
+.cta-final{padding:100px 24px;text-align:center;position:relative;overflow:hidden;}
+.cta-final::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,#c8f06010 0%,transparent 70%);pointer-events:none;}
+.cta-final h2{font-family:'Fraunces',serif;font-size:clamp(36px,6vw,60px);font-weight:200;letter-spacing:-2px;margin-bottom:16px;}
+.cta-final h2 em{font-style:italic;color:var(--accent);}
+.cta-final p{font-size:16px;color:var(--text2);margin-bottom:36px;}
+
+/* FOOTER */
+footer{padding:40px 24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:gap;max-width:1000px;margin:0 auto;}
+.footer-logo{font-family:'Fraunces',serif;font-size:18px;font-weight:300;letter-spacing:-0.5px;}
+.footer-logo span{color:var(--accent);}
+.footer-text{font-size:12px;color:var(--text3);}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  nav{padding:14px 16px;}
+  .hero{padding:100px 16px 60px;}
+  .features,.how,.pricing,.testimonials,.faq,.cta-final{padding:60px 16px;}
+  footer{flex-direction:column;gap:12px;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Rotin<span>AI</span></div>
+  <a href="assinar.html" class="nav-cta">Começar grátis</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="hero-badge-dot"></span>
+    ✦ novo · organize com inteligência
+  </div>
+  <h1>Sua rotina<br>com <em>inteligência</em><br>artificial</h1>
+  <p class="hero-sub">RotinAI organiza seu dia automaticamente, cria hábitos que duram e mostra sua evolução. Tudo em 2 minutos pela manhã.</p>
+  <div class="hero-btns">
+    <a href="assinar.html" class="btn-primary">Começar grátis ↗</a>
+    <a href="#como-funciona" class="btn-secondary">Ver como funciona</a>
+  </div>
+  <div class="hero-social">
+    <div class="hero-social-avatars">
+      <div class="avatar-sm">😊</div>
+      <div class="avatar-sm">🙌</div>
+      <div class="avatar-sm">💪</div>
+      <div class="avatar-sm">✨</div>
+    </div>
+    <span style="color:var(--text2);font-size:13px">+500 pessoas organizando a rotina</span>
+  </div>
+
+  <!-- PHONE MOCKUP -->
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="phone-inner">
+          <div class="p-header">
+            <div>
+              <div class="p-greeting">Bom dia, <em>você</em> ✦</div>
+              <div class="p-date">Sábado, 09 de mai</div>
+            </div>
+            <div class="p-avatar">👤</div>
+          </div>
+          <div class="p-banner">
+            <div class="p-banner-label">✦ IA · Resumo do dia</div>
+            <div class="p-banner-text">Você tem <b>3 tarefas</b> hoje. Foque nas <b>prioritárias</b> pela manhã.</div>
+          </div>
+          <div class="p-section">Tarefas de hoje</div>
+          <div class="p-task">
+            <div class="p-check done"></div>
+            <div class="p-task-text done">Responder e-mails</div>
+            <div class="p-dot" style="background:#c8f060"></div>
+          </div>
+          <div class="p-task">
+            <div class="p-check"></div>
+            <div class="p-task-text">Reunião de alinhamento</div>
+            <div class="p-dot" style="background:#ff6b4a"></div>
+          </div>
+          <div class="p-task">
+            <div class="p-check"></div>
+            <div class="p-task-text">Estudar 30 minutos</div>
+            <div class="p-dot" style="background:#e8c840"></div>
+          </div>
+          <div class="p-section">Hábitos</div>
+          <div class="p-habits">
+            <div class="p-habit"><div class="p-habit-em">🧘</div><div class="p-habit-name">Meditar</div><div class="p-habit-streak">🔥7</div></div>
+            <div class="p-habit"><div class="p-habit-em">💧</div><div class="p-habit-name">Água</div><div class="p-habit-streak">🔥12</div></div>
+            <div class="p-habit"><div class="p-habit-em">📚</div><div class="p-habit-name">Ler</div><div class="p-habit-streak">🔥3</div></div>
+            <div class="p-habit"><div class="p-habit-em">🏃</div><div class="p-habit-name">Exercício</div><div class="p-habit-streak">🔥5</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="recursos">
+  <div class="section-label">recursos</div>
+  <h2>Tudo que você precisa<br>para ser <em>mais produtivo</em></h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon fi-green">✦</div>
+      <div class="feature-title">IA organiza seu dia</div>
+      <div class="feature-text">Todo manhã a IA analisa suas tarefas e monta automaticamente a ordem ideal para você ser mais produtivo.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-coral">🔥</div>
+      <div class="feature-title">Hábitos com sequência</div>
+      <div class="feature-text">Crie hábitos diários e acompanhe sua sequência. Streaks que te mantêm motivado a nunca quebrar a corrente.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-blue">☑</div>
+      <div class="feature-title">Tarefas inteligentes</div>
+      <div class="feature-text">Adicione tarefas com prioridade e horário. O app destaca o que é urgente e te lembra na hora certa.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-gold">📊</div>
+      <div class="feature-title">Relatório semanal</div>
+      <div class="feature-text">Veja sua evolução com gráficos de produtividade, taxa de conclusão e análise dos seus melhores horários.</div>
+      <span class="feature-pro">👑 apenas no PRO</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-green">📱</div>
+      <div class="feature-title">App no celular</div>
+      <div class="feature-text">Instale direto na tela inicial do celular. Funciona offline, abre em 1 segundo e não ocupa espaço.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-coral">↓</div>
+      <div class="feature-title">Exportar dados</div>
+      <div class="feature-text">Exporte suas tarefas e hábitos para CSV a qualquer momento. Seus dados sempre com você.</div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="how" id="como-funciona">
+  <div class="section-label">como funciona</div>
+  <h2>Pronto em<br><em>3 passos</em></h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <h3>Instale no celular</h3>
+        <p>Acesse o link, abra no navegador do celular e adicione à tela inicial. Sem baixar nada na loja de apps.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <h3>Adicione suas tarefas e hábitos</h3>
+        <p>Leva 2 minutos. Coloque o que você precisa fazer hoje e os hábitos que quer manter — a IA cuida do resto.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <h3>Siga o plano e evolua</h3>
+        <p>Todo dia pela manhã você tem um plano pronto. Marque as tarefas, mantenha a sequência e veja sua produtividade crescer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="planos">
+  <div class="section-label">planos</div>
+  <h2>Simples e<br><em>acessível</em></h2>
+  <div class="pricing-cards">
+    <div class="price-card">
+      <div class="price-name">Grátis</div>
+      <div class="price-value"><sup></sup>R$ 0</div>
+      <div class="price-period">para sempre · sem cartão</div>
+      <div class="price-features">
+        <div class="pf"><div class="pf-dot"></div>5 tarefas por dia</div>
+        <div class="pf"><div class="pf-dot"></div>1 hábito</div>
+        <div class="pf"><div class="pf-dot"></div>App no celular</div>
+        <div class="pf off"><div class="pf-dot"></div>IA desativada</div>
+        <div class="pf off"><div class="pf-dot"></div>Relatório semanal</div>
+      </div>
+      <a href="index.html" class="price-btn">Começar grátis</a>
+    </div>
+    <div class="price-card featured">
+      <div class="price-name">PRO</div>
+      <div class="price-value accent"><sup>R$</sup>9<span style="font-size:26px">,90</span></div>
+      <div class="price-period">por mês · cancele quando quiser</div>
+      <div class="price-features">
+        <div class="pf"><div class="pf-dot"></div>Tarefas ilimitadas</div>
+        <div class="pf"><div class="pf-dot"></div>Hábitos ilimitados</div>
+        <div class="pf"><div class="pf-dot"></div>IA organiza seu dia</div>
+        <div class="pf"><div class="pf-dot"></div>Relatório semanal completo</div>
+        <div class="pf"><div class="pf-dot"></div>Suporte prioritário</div>
+      </div>
+      <a href="assinar.html" class="price-btn accent-btn">Assinar PRO ↗</a>
+    </div>
+  </div>
+  <p style="font-size:13px;color:var(--text3);margin-top:20px;font-family:'DM Mono',monospace;">R$9,90/mês · menos que um café por semana</p>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="testimonials" id="depoimentos">
+  <div class="section-label">depoimentos</div>
+  <h2>O que dizem<br>nossos <em>usuários</em></h2>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"Finalmente um app de rotina que realmente uso todo dia. A IA que organiza as prioridades mudou tudo pra mim."</div>
+      <div class="testi-author">
+        <div class="testi-avatar">👩</div>
+        <div><div class="testi-name">Ana Paula S.</div><div class="testi-role">Designer · São Paulo</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"Uso há 3 semanas e minha sequência de hábitos nunca foi tão longa. O app é simples mas viciante do bom jeito."</div>
+      <div class="testi-author">
+        <div class="testi-avatar">👨</div>
+        <div><div class="testi-name">Carlos M.</div><div class="testi-role">Empreendedor · RJ</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"R$9,90 bem gastos. O relatório semanal me mostrou que sou mais produtivo de manhã — mudei toda minha rotina."</div>
+      <div class="testi-author">
+        <div class="testi-avatar">👩</div>
+        <div><div class="testi-name">Fernanda L.</div><div class="testi-role">Estudante · BH</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="section-label">dúvidas</div>
+  <h2>Perguntas<br><em>frequentes</em></h2>
+  <div style="margin-top:40px;">
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Precisa baixar na loja de apps? <span class="faq-arrow">+</span></div>
+      <div class="faq-a">Não! O RotinAI é um PWA — você acessa pelo navegador e instala direto na tela inicial do celular. Funciona no Android e iPhone sem precisar da Play Store ou App Store.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Posso cancelar quando quiser? <span class="faq-arrow">+</span></div>
+      <div class="faq-a">Sim, sem fidelidade. Você pode cancelar a qualquer momento pelo e-mail de suporte e não será cobrado no mês seguinte.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Como funciona a IA? <span class="faq-arrow">+</span></div>
+      <div class="faq-a">A IA analisa suas tarefas, prioridades e histórico de produtividade para sugerir a melhor ordem para o seu dia. Quanto mais você usa, mais personalizado fica.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Meus dados ficam salvos? <span class="faq-arrow">+</span></div>
+      <div class="faq-a">Sim. Todos os dados são salvos automaticamente no seu dispositivo. Você também pode exportar tudo em CSV a qualquer momento.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Funciona sem internet? <span class="faq-arrow">+</span></div>
+      <div class="faq-a">Sim! O app funciona 100% offline depois de instalado. Perfeito para usar em qualquer lugar.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <h2>Comece hoje.<br><em>É grátis.</em></h2>
+  <p>Junte-se a centenas de pessoas que já organizaram a rotina com o RotinAI.</p>
+  <a href="assinar.html" class="btn-primary" style="margin:0 auto;display:inline-flex;">Instalar o app agora ↗</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Rotin<span>AI</span></div>
+  <div class="footer-text">© 2026 RotinAI · Todos os direitos reservados</div>
+  <div class="footer-text" style="color:var(--text3)">contato@rotinai.com</div>
+</footer>
+
+<script>
+function toggleFaq(el) {
+  el.classList.toggle('open');
+}
+
+// Animação suave ao rolar
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.feature-card, .testi-card, .step, .price-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity .5s ease, transform .5s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>

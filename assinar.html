@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<meta name="theme-color" content="#0d0d0d"/>
+<title>RotinAI — Assinar PRO</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<!-- Stripe.js -->
+<script src="https://js.stripe.com/v3/"></script>
+<!-- Mercado Pago SDK -->
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<style>
+:root{
+  --bg:#0d0d0d;--bg2:#161616;--bg3:#1f1f1f;
+  --border:#2a2a2a;--border2:#333;
+  --text:#f5f2ed;--text2:#888;--text3:#444;
+  --accent:#c8f060;--gold:#e8c840;--coral:#ff6b4a;
+  --r:16px;--r-sm:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;}
+body{max-width:420px;margin:0 auto;padding:0 0 40px;}
+
+header{padding:48px 20px 24px;text-align:center;}
+.logo{font-family:'Fraunces',serif;font-size:28px;font-weight:300;letter-spacing:-1px;}
+.logo span{color:var(--accent);}
+.tagline{font-size:13px;color:var(--text2);margin-top:6px;}
+
+.plan-card{margin:0 20px 20px;background:linear-gradient(135deg,#1a2a0a,#0d1a0d);border:1px solid #c8f06044;border-radius:var(--r);padding:20px;text-align:center;position:relative;overflow:hidden;}
+.plan-card::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:var(--accent);opacity:.05;}
+.plan-badge{display:inline-block;background:#c8f06022;border:1px solid #c8f06055;color:var(--accent);font-family:'DM Mono',monospace;font-size:10px;padding:3px 12px;border-radius:99px;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.plan-price{font-family:'Fraunces',serif;font-size:52px;font-weight:300;letter-spacing:-2px;color:var(--accent);line-height:1;}
+.plan-price sup{font-size:22px;vertical-align:top;margin-top:10px;}
+.plan-price sub{font-size:16px;color:var(--text2);}
+.plan-desc{font-size:13px;color:var(--text2);margin:8px 0 16px;}
+.features{display:flex;flex-direction:column;gap:8px;text-align:left;}
+.feature{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text2);}
+.feature-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+
+.section-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:0 20px;margin-bottom:10px;}
+
+/* MÉTODO DE PAGAMENTO */
+.methods{padding:0 20px;margin-bottom:20px;}
+.method-option{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;margin-bottom:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px;}
+.method-option.active{border-color:#c8f06066;background:#c8f06008;}
+.method-radio{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.method-option.active .method-radio{border-color:var(--accent);}
+.method-radio-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:none;}
+.method-option.active .method-radio-dot{display:block;}
+.method-info{flex:1;}
+.method-name{font-size:14px;font-weight:500;margin-bottom:2px;}
+.method-desc{font-size:11px;color:var(--text2);}
+.method-icons{display:flex;gap:4px;flex-shrink:0;}
+.method-icon{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:10px;font-family:'DM Mono',monospace;color:var(--text2);}
+
+/* FORMULÁRIOS */
+.form-wrap{padding:0 20px;margin-bottom:20px;}
+.form-panel{display:none;}
+.form-panel.active{display:block;}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.field label{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;}
+.field input,.field select{height:48px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;padding:0 14px;}
+.field input:focus,.field select:focus{outline:none;border-color:#c8f06066;}
+.field input::placeholder{color:var(--text3);}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* STRIPE ELEMENTS */
+.stripe-field{height:48px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);padding:14px;}
+.stripe-field.focused{border-color:#c8f06066;}
+
+/* PIX */
+.pix-info{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:16px;text-align:center;margin-bottom:12px;}
+.pix-logo{font-size:32px;margin-bottom:8px;}
+.pix-desc{font-size:13px;color:var(--text2);line-height:1.5;}
+.pix-steps{display:flex;flex-direction:column;gap:8px;margin-top:12px;text-align:left;}
+.pix-step{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--text2);}
+.pix-num{width:20px;height:20px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'DM Mono',monospace;}
+
+/* BOTÃO */
+.pay-btn{width:calc(100% - 40px);margin:0 20px;height:54px;border-radius:var(--r);border:none;background:var(--accent);color:#0d0d0d;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.pay-btn:active{opacity:.85;transform:scale(.98);}
+.pay-btn:disabled{opacity:.5;cursor:default;}
+.pay-btn.loading::after{content:'';width:18px;height:18px;border:2px solid #0d0d0d44;border-top-color:#0d0d0d;border-radius:50%;animation:spin .7s linear infinite;margin-left:8px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.security{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:var(--text3);margin-top:12px;font-family:'DM Mono',monospace;}
+
+/* MODAL SUCESSO */
+.success-overlay{display:none;position:fixed;inset:0;background:#000c;z-index:999;align-items:center;justify-content:center;padding:20px;}
+.success-overlay.open{display:flex;}
+.success-modal{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:32px 24px;width:100%;max-width:380px;text-align:center;}
+.success-icon{font-size:48px;margin-bottom:16px;}
+.success-title{font-family:'Fraunces',serif;font-size:24px;font-weight:300;letter-spacing:-0.5px;color:var(--accent);margin-bottom:8px;}
+.success-text{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.success-btn{width:100%;height:48px;border-radius:var(--r-sm);border:none;background:var(--accent);color:#0d0d0d;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;}
+
+/* CONFIG BANNER */
+.config-banner{margin:0 20px 16px;background:#1a1500;border:1px solid var(--gold)44;border-radius:var(--r-sm);padding:12px 14px;display:flex;gap:10px;align-items:flex-start;}
+.config-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:4px;}
+.config-text{font-size:12px;color:#e8c84099;line-height:1.5;}
+.config-text b{color:var(--gold);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Rotin<span>AI</span></div>
+  <div class="tagline">Ative o plano PRO e desbloqueie tudo</div>
+</header>
+
+<!-- PLANO -->
+<div class="plan-card">
+  <div class="plan-badge">✦ plano pro</div>
+  <div class="plan-price"><sup>R$</sup>9<span style="font-size:36px">,90</span><sub>/mês</sub></div>
+  <div class="plan-desc">Cancele quando quiser · Sem fidelidade</div>
+  <div class="features">
+    <div class="feature"><div class="feature-dot"></div>Tarefas ilimitadas todos os dias</div>
+    <div class="feature"><div class="feature-dot"></div>IA organiza sua rotina automaticamente</div>
+    <div class="feature"><div class="feature-dot"></div>Hábitos ilimitados com sequência</div>
+    <div class="feature"><div class="feature-dot"></div>Relatório semanal de produtividade</div>
+    <div class="feature"><div class="feature-dot"></div>Suporte prioritário</div>
+  </div>
+</div>
+
+<!-- AVISO DE CONFIGURAÇÃO -->
+<div class="config-banner">
+  <div class="config-dot"></div>
+  <div class="config-text">
+    <b>Configure suas chaves antes de publicar:</b> substitua <b>STRIPE_PUBLIC_KEY</b> e <b>MP_PUBLIC_KEY</b> no código pelas suas chaves reais do Stripe e Mercado Pago. Veja o guia abaixo.
+  </div>
+</div>
+
+<!-- MÉTODO -->
+<div class="section-title">Forma de pagamento</div>
+<div class="methods">
+  <div class="method-option active" id="m-stripe" onclick="selectMethod('stripe')">
+    <div class="method-radio"><div class="method-radio-dot"></div></div>
+    <div class="method-info">
+      <div class="method-name">Cartão de crédito</div>
+      <div class="method-desc">Visa, Mastercard, Elo, Amex</div>
+    </div>
+    <div class="method-icons">
+      <span class="method-icon">VISA</span>
+      <span class="method-icon">MC</span>
+    </div>
+  </div>
+  <div class="method-option" id="m-pix" onclick="selectMethod('pix')">
+    <div class="method-radio"><div class="method-radio-dot"></div></div>
+    <div class="method-info">
+      <div class="method-name">Pix</div>
+      <div class="method-desc">Mercado Pago · Aprovação imediata</div>
+    </div>
+    <div class="method-icons">
+      <span class="method-icon" style="color:#00b4d8">PIX</span>
+    </div>
+  </div>
+</div>
+
+<!-- FORMULÁRIO STRIPE (CARTÃO) -->
+<div class="form-wrap">
+  <div class="form-panel active" id="panel-stripe">
+    <div class="field">
+      <label>Nome no cartão</label>
+      <input type="text" id="card-name" placeholder="Como está no cartão"/>
+    </div>
+    <div class="field">
+      <label>E-mail</label>
+      <input type="email" id="card-email" placeholder="seu@email.com"/>
+    </div>
+    <div class="field">
+      <label>Número do cartão</label>
+      <div class="stripe-field" id="card-number-el"></div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Validade</label>
+        <div class="stripe-field" id="card-expiry-el"></div>
+      </div>
+      <div class="field">
+        <label>CVV</label>
+        <div class="stripe-field" id="card-cvc-el"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORMULÁRIO PIX -->
+  <div class="form-panel" id="panel-pix">
+    <div class="field">
+      <label>Nome completo</label>
+      <input type="text" id="pix-name" placeholder="Seu nome completo"/>
+    </div>
+    <div class="field">
+      <label>E-mail</label>
+      <input type="email" id="pix-email" placeholder="seu@email.com"/>
+    </div>
+    <div class="field">
+      <label>CPF</label>
+      <input type="text" id="pix-cpf" placeholder="000.000.000-00" maxlength="14"/>
+    </div>
+    <div class="pix-info">
+      <div class="pix-logo">🏦</div>
+      <div class="pix-desc">Após clicar em assinar, você receberá um QR Code Pix para pagar R$9,90. A assinatura é ativada automaticamente.</div>
+      <div class="pix-steps">
+        <div class="pix-step"><div class="pix-num">1</div>Clique em "Assinar agora"</div>
+        <div class="pix-step"><div class="pix-num">2</div>Escaneie o QR Code com seu banco</div>
+        <div class="pix-step"><div class="pix-num">3</div>Acesso PRO liberado em segundos</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTÃO PAGAR -->
+<button class="pay-btn" id="pay-btn" onclick="pay()">
+  <span id="btn-text">Assinar agora — R$9,90/mês</span>
+</button>
+<div class="security">🔒 Pagamento 100% seguro e criptografado</div>
+
+<!-- MODAL SUCESSO -->
+<div class="success-overlay" id="success-overlay">
+  <div class="success-modal">
+    <div class="success-icon">🎉</div>
+    <div class="success-title">PRO ativado!</div>
+    <div class="success-text">Seu plano foi ativado com sucesso. Bem-vindo ao RotinAI PRO — aproveite todos os recursos!</div>
+    <button class="success-btn" onclick="window.location.href='index.html'">Abrir o app ↗</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CONFIGURAÇÃO — SUBSTITUA COM SUAS CHAVES REAIS
+// ============================================================
+const STRIPE_PUBLIC_KEY = 'pk_test_SUA_CHAVE_PUBLICA_STRIPE_AQUI';
+// Obtenha em: https://dashboard.stripe.com/apikeys
+// Crie um Price recorrente em: https://dashboard.stripe.com/prices
+
+const MP_PUBLIC_KEY = 'TEST-SUA_CHAVE_PUBLICA_MERCADOPAGO_AQUI';
+// Obtenha em: https://www.mercadopago.com.br/developers/panel/credentials
+
+// URL do seu backend (Vercel Serverless Function)
+const BACKEND_URL = '/api';
+// ============================================================
+
+let stripe, cardNumber, cardExpiry, cardCvc, mp;
+let currentMethod = 'stripe';
+
+function initStripe() {
+  try {
+    stripe = Stripe(STRIPE_PUBLIC_KEY);
+    const elements = stripe.elements({
+      appearance: {
+        theme: 'night',
+        variables: {
+          colorBackground: '#1f1f1f',
+          colorText: '#f5f2ed',
+          colorTextPlaceholder: '#444',
+          colorIconTab: '#888',
+          borderRadius: '10px',
+          fontFamily: 'DM Sans, sans-serif',
+        }
+      }
+    });
+    cardNumber = elements.create('cardNumber', { style: { base: { color: '#f5f2ed', fontSize: '15px', fontFamily: 'DM Sans, sans-serif', '::placeholder': { color: '#444' } } } });
+    cardExpiry = elements.create('cardExpiry', { style: { base: { color: '#f5f2ed', fontSize: '15px', fontFamily: 'DM Sans, sans-serif' } } });
+    cardCvc    = elements.create('cardCvc',    { style: { base: { color: '#f5f2ed', fontSize: '15px', fontFamily: 'DM Sans, sans-serif' } } });
+    cardNumber.mount('#card-number-el');
+    cardExpiry.mount('#card-expiry-el');
+    cardCvc.mount('#card-cvc-el');
+    [cardNumber, cardExpiry, cardCvc].forEach(el => {
+      el.on('focus', () => el._frame.closest('.stripe-field').classList.add('focused'));
+      el.on('blur',  () => el._frame.closest('.stripe-field').classList.remove('focused'));
+    });
+  } catch(e) { console.log('Stripe init — configure sua chave pública'); }
+}
+
+function initMP() {
+  try {
+    mp = new MercadoPago(MP_PUBLIC_KEY, { locale: 'pt-BR' });
+  } catch(e) { console.log('MP init — configure sua chave pública'); }
+}
+
+function selectMethod(m) {
+  currentMethod = m;
+  document.querySelectorAll('.method-option').forEach(el => el.classList.remove('active'));
+  document.getElementById('m-' + m).classList.add('active');
+  document.querySelectorAll('.form-panel').forEach(el => el.classList.remove('active'));
+  document.getElementById('panel-' + m).classList.add('active');
+  document.getElementById('btn-text').textContent = m === 'pix'
+    ? 'Gerar QR Code Pix — R$9,90'
+    : 'Assinar agora — R$9,90/mês';
+}
+
+function maskCPF(e) {
+  let v = e.target.value.replace(/\D/g,'');
+  if(v.length > 11) v = v.slice(0,11);
+  v = v.replace(/(\d{3})(\d)/,'$1.$2')
+       .replace(/(\d{3})(\d)/,'$1.$2')
+       .replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+  e.target.value = v;
+}
+document.getElementById('pix-cpf').addEventListener('input', maskCPF);
+
+async function pay() {
+  const btn = document.getElementById('pay-btn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+  document.getElementById('btn-text').textContent = 'Processando...';
+
+  try {
+    if (currentMethod === 'stripe') {
+      await payStripe();
+    } else {
+      await payPix();
+    }
+  } catch(e) {
+    alert('Erro: ' + (e.message || 'Tente novamente.'));
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    document.getElementById('btn-text').textContent = currentMethod === 'pix'
+      ? 'Gerar QR Code Pix — R$9,90'
+      : 'Assinar agora — R$9,90/mês';
+  }
+}
+
+async function payStripe() {
+  const name  = document.getElementById('card-name').value.trim();
+  const email = document.getElementById('card-email').value.trim();
+  if (!name || !email) throw new Error('Preencha nome e e-mail.');
+  if (!stripe || !cardNumber) throw new Error('Configure a chave pública do Stripe.');
+
+  // 1. Criar PaymentMethod no frontend
+  const { paymentMethod, error } = await stripe.createPaymentMethod({
+    type: 'card',
+    card: cardNumber,
+    billing_details: { name, email }
+  });
+  if (error) throw new Error(error.message);
+
+  // 2. Enviar para backend criar assinatura
+  const res = await fetch(BACKEND_URL + '/create-subscription', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ paymentMethodId: paymentMethod.id, email, name })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Erro no servidor.');
+
+  // 3. Confirmar pagamento se necessário (3D Secure)
+  if (data.clientSecret) {
+    const { error: confirmError } = await stripe.confirmCardPayment(data.clientSecret);
+    if (confirmError) throw new Error(confirmError.message);
+  }
+
+  showSuccess();
+}
+
+async function payPix() {
+  const name  = document.getElementById('pix-name').value.trim();
+  const email = document.getElementById('pix-email').value.trim();
+  const cpf   = document.getElementById('pix-cpf').value.replace(/\D/g,'');
+  if (!name || !email || cpf.length < 11) throw new Error('Preencha todos os campos.');
+
+  // Enviar para backend gerar QR Code Pix
+  const res = await fetch(BACKEND_URL + '/create-pix', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, cpf })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Erro ao gerar Pix.');
+
+  // Mostrar QR Code
+  showQRCode(data.qr_code, data.qr_code_base64);
+}
+
+function showQRCode(code, base64) {
+  const btn = document.getElementById('pay-btn');
+  btn.disabled = false;
+  btn.classList.remove('loading');
+
+  const overlay = document.getElementById('success-overlay');
+  overlay.querySelector('.success-icon').textContent = '📲';
+  overlay.querySelector('.success-title').textContent = 'QR Code gerado!';
+  overlay.querySelector('.success-text').innerHTML =
+    `<img src="data:image/png;base64,${base64}" style="width:200px;height:200px;border-radius:12px;margin-bottom:12px;display:block;margin:0 auto 12px"/><br>Escaneie com seu banco. Após o pagamento, seu PRO é ativado automaticamente.`;
+  overlay.querySelector('.success-btn').textContent = 'Já paguei — abrir app ↗';
+  overlay.classList.add('open');
+}
+
+function showSuccess() {
+  document.getElementById('success-overlay').classList.add('open');
+  // Salvar status PRO localmente
+  try { localStorage.setItem('rotinai-pro', '1'); } catch(e){}
+}
+
+// Init
+initStripe();
+initMP();
+</script>
+</body>
+</html>
