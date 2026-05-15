@@ -1,6 +1,3 @@
-// api/create-pix.js
-// Vercel Serverless Function — Mercado Pago Pix
-
 const https = require('https');
 
 function mpRequest(path, body) {
@@ -13,7 +10,7 @@ function mpRequest(path, body) {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.MP_ACCESS_TOKEN}`,
-        'X-Idempotency-Key': `rotinai-${Date.now()}-${Math.random()}`,
+        'X-Idempotency-Key': `rotinai-${Date.now()}`,
       },
     };
     const req = https.request(options, (resp) => {
@@ -43,7 +40,6 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Dados incompletos' });
     }
 
-    // Criar pagamento Pix no Mercado Pago
     const payload = {
       transaction_amount: 9.90,
       description: 'RotinAI PRO — Assinatura mensal',
@@ -54,19 +50,13 @@ module.exports = async (req, res) => {
         last_name: name.split(' ').slice(1).join(' ') || name,
         identification: { type: 'CPF', number: cpf },
       },
-      // Pix expira em 30 minutos
       date_of_expiration: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
     };
 
     const { status, body } = await mpRequest('/v1/payments', payload);
-
-    if (status !== 201) {
-      console.error('MP error:', body);
-      return res.status(400).json({ error: body.message || 'Erro ao gerar Pix' });
-    }
+    if (status !== 201) return res.status(400).json({ error: body.message || 'Erro ao gerar Pix' });
 
     const pixData = body.point_of_interaction?.transaction_data;
-
     return res.json({
       payment_id: body.id,
       qr_code: pixData?.qr_code,
