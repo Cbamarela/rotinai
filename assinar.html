@@ -308,7 +308,10 @@ async function pay() {
       await payPix();
     }
   } catch(e) {
-    alert('Erro: ' + (e.message || 'Tente novamente.'));
+    console.error('Erro completo:', e);
+    alert('Erro: ' + (e.message || 'Tente novamente.') + '
+
+Abra o console do navegador (F12) para mais detalhes.');
     btn.disabled = false;
     btn.classList.remove('loading');
     document.getElementById('btn-text').textContent = currentMethod === 'pix'
@@ -337,7 +340,9 @@ async function payStripe() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ paymentMethodId: paymentMethod.id, email, name })
   });
-  const data = await res.json();
+  const rawText = await res.text();
+  let data;
+  try { data = JSON.parse(rawText); } catch(e) { throw new Error('Resposta inválida da API: ' + rawText.substring(0, 200)); }
   if (!res.ok) throw new Error(data.error || 'Erro no servidor.');
 
   // 3. Confirmar pagamento se necessário (3D Secure)
