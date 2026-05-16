@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://js.stripe.com/v3/"></script>
 <style>
-:root{--bg:#0d0d0d;--bg2:#161616;--bg3:#1f1f1f;--border:#2a2a2a;--border2:#333;--text:#f5f2ed;--text2:#888;--text3:#444;--accent:#c8f060;--gold:#e8c840;--r:16px;--r-sm:10px;}
+:root{--bg:#0d0d0d;--bg2:#161616;--bg3:#1f1f1f;--border:#2a2a2a;--border2:#333;--text:#f5f2ed;--text2:#888;--text3:#444;--accent:#c8f060;--r:16px;--r-sm:10px;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;}
 body{max-width:420px;margin:0 auto;padding:0 0 48px;}
@@ -18,7 +18,6 @@ header{padding:48px 20px 24px;text-align:center;}
 .plan-card{margin:0 20px 20px;background:linear-gradient(135deg,#1a2a0a,#0d1a0d);border:1px solid #c8f06044;border-radius:var(--r);padding:20px;text-align:center;}
 .plan-badge{display:inline-block;background:#c8f06022;border:1px solid #c8f06055;color:var(--accent);font-family:'DM Mono',monospace;font-size:10px;padding:3px 12px;border-radius:99px;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
 .plan-price{font-family:'Fraunces',serif;font-size:52px;font-weight:300;letter-spacing:-2px;color:var(--accent);line-height:1;}
-.plan-price sup{font-size:22px;vertical-align:top;margin-top:10px;}
 .plan-price sub{font-size:16px;color:var(--text2);}
 .plan-desc{font-size:13px;color:var(--text2);margin:8px 0 16px;}
 .features{display:flex;flex-direction:column;gap:8px;text-align:left;}
@@ -35,48 +34,48 @@ header{padding:48px 20px 24px;text-align:center;}
 .method-info{flex:1;}
 .method-name{font-size:14px;font-weight:500;margin-bottom:2px;}
 .method-desc{font-size:11px;color:var(--text2);}
-.method-icons{display:flex;gap:4px;flex-shrink:0;}
 .method-icon{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:10px;font-family:'DM Mono',monospace;color:var(--text2);}
 .form-wrap{padding:0 20px;margin-bottom:20px;}
 .form-panel{display:none;}
 .form-panel.active{display:block;}
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
 .field label{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;}
-.field input{height:52px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;padding:0 14px;-webkit-appearance:none;appearance:none;outline:none;}
+.field input{height:52px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;padding:0 14px;outline:none;-webkit-appearance:none;}
 .field input:focus{border-color:var(--accent);}
 .field input::placeholder{color:var(--text3);}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+/* Stripe Element container */
+.stripe-el{height:52px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--r-sm);padding:15px 14px;transition:border-color .2s;}
+.stripe-el.focused{border-color:var(--accent);}
 .pix-info{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:16px;text-align:center;margin-bottom:12px;}
 .pix-logo{font-size:32px;margin-bottom:8px;}
 .pix-desc{font-size:13px;color:var(--text2);line-height:1.5;}
 .pix-steps{display:flex;flex-direction:column;gap:8px;margin-top:12px;text-align:left;}
-.pix-step{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--text2);}
+.pix-step{display:flex;gap:10px;font-size:12px;color:var(--text2);}
 .pix-num{width:20px;height:20px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'DM Mono',monospace;}
-.pay-btn{width:calc(100% - 40px);margin:0 20px;height:56px;border-radius:var(--r);border:none;background:var(--accent);color:#0d0d0d;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-appearance:none;}
+.pay-btn{width:calc(100% - 40px);margin:0 20px;height:56px;border-radius:var(--r);border:none;background:var(--accent);color:#0d0d0d;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
 .pay-btn:active{opacity:.85;}
 .pay-btn:disabled{opacity:.5;cursor:default;}
 .security{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:var(--text3);margin-top:12px;font-family:'DM Mono',monospace;}
+.error-box{background:#ff5c5c18;border:1px solid #ff5c5c44;border-radius:var(--r-sm);padding:12px 14px;margin:0 20px 16px;font-size:13px;color:#ff9090;display:none;line-height:1.5;}
+.spin{width:20px;height:20px;border:2px solid #0d0d0d55;border-top-color:#0d0d0d;border-radius:50%;animation:sp .7s linear infinite;display:none;}
+@keyframes sp{to{transform:rotate(360deg)}}
 .success-overlay{display:none;position:fixed;inset:0;background:#000c;z-index:999;align-items:center;justify-content:center;padding:20px;}
 .success-overlay.open{display:flex;}
 .success-modal{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:32px 24px;width:100%;max-width:380px;text-align:center;}
 .success-icon{font-size:48px;margin-bottom:16px;}
-.success-title{font-family:'Fraunces',serif;font-size:24px;font-weight:300;letter-spacing:-0.5px;color:var(--accent);margin-bottom:8px;}
+.success-title{font-family:'Fraunces',serif;font-size:24px;font-weight:300;color:var(--accent);margin-bottom:8px;}
 .success-text{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
-.success-btn{width:100%;height:48px;border-radius:var(--r-sm);border:none;background:var(--accent);color:#0d0d0d;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;}
-.error-box{background:#ff5c5c18;border:1px solid #ff5c5c44;border-radius:var(--r-sm);padding:12px 14px;margin:0 20px 16px;font-size:13px;color:#ff9090;display:none;}
-.loading-spin{width:20px;height:20px;border:2px solid #0d0d0d44;border-top-color:#0d0d0d;border-radius:50%;animation:spin .7s linear infinite;display:none;}
-@keyframes spin{to{transform:rotate(360deg)}}
+.success-btn{width:100%;height:48px;border-radius:var(--r-sm);border:none;background:var(--accent);color:#0d0d0d;font-size:15px;font-weight:500;cursor:pointer;}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">Rotin<span>AI</span></div>
-</header>
+<header><div class="logo">Rotin<span>AI</span></div></header>
 
 <div class="plan-card">
   <div class="plan-badge">✦ plano pro</div>
-  <div class="plan-price"><sup>R$</sup>9<span style="font-size:36px">,90</span><sub>/mês</sub></div>
+  <div class="plan-price">R$9<span style="font-size:32px">,90</span><sub>/mês</sub></div>
   <div class="plan-desc">Cancele quando quiser · Sem fidelidade</div>
   <div class="features">
     <div class="feature"><div class="feature-dot"></div>Tarefas e hábitos ilimitados</div>
@@ -93,31 +92,25 @@ header{padding:48px 20px 24px;text-align:center;}
   <div class="method-option active" id="m-stripe" onclick="selectMethod('stripe')">
     <div class="method-radio"><div class="method-radio-dot"></div></div>
     <div class="method-info"><div class="method-name">Cartão de crédito</div><div class="method-desc">Visa, Mastercard, Elo, Amex</div></div>
-    <div class="method-icons"><span class="method-icon">VISA</span><span class="method-icon">MC</span></div>
+    <span class="method-icon">VISA</span>
   </div>
   <div class="method-option" id="m-pix" onclick="selectMethod('pix')">
     <div class="method-radio"><div class="method-radio-dot"></div></div>
     <div class="method-info"><div class="method-name">Pix</div><div class="method-desc">Aprovação imediata</div></div>
-    <div class="method-icons"><span class="method-icon" style="color:#00b4d8">PIX</span></div>
+    <span class="method-icon" style="color:#00b4d8">PIX</span>
   </div>
 </div>
 
 <div class="form-wrap">
-  <!-- CARTÃO -->
   <div class="form-panel active" id="panel-stripe">
-    <div class="field"><label>Nome completo</label><input type="text" id="card-name" placeholder="Seu nome" autocomplete="name"/></div>
-    <div class="field"><label>E-mail</label><input type="email" id="card-email" placeholder="seu@email.com" autocomplete="email" inputmode="email"/></div>
-    <div class="field"><label>Número do cartão</label><input type="tel" id="card-number" placeholder="0000 0000 0000 0000" maxlength="19" inputmode="numeric" autocomplete="cc-number"/></div>
-    <div class="row2">
-      <div class="field"><label>Validade</label><input type="tel" id="card-expiry" placeholder="MM/AA" maxlength="5" inputmode="numeric" autocomplete="cc-exp"/></div>
-      <div class="field"><label>CVV</label><input type="tel" id="card-cvc" placeholder="123" maxlength="4" inputmode="numeric" autocomplete="cc-csc"/></div>
-    </div>
+    <div class="field"><label>Nome no cartão</label><input type="text" id="card-name" placeholder="Como está no cartão" autocomplete="cc-name"/></div>
+    <div class="field"><label>E-mail</label><input type="email" id="card-email" placeholder="seu@email.com" inputmode="email"/></div>
+    <div class="field"><label>Dados do cartão</label><div class="stripe-el" id="card-element"></div></div>
   </div>
 
-  <!-- PIX -->
   <div class="form-panel" id="panel-pix">
-    <div class="field"><label>Nome completo</label><input type="text" id="pix-name" placeholder="Seu nome completo" autocomplete="name"/></div>
-    <div class="field"><label>E-mail</label><input type="email" id="pix-email" placeholder="seu@email.com" autocomplete="email" inputmode="email"/></div>
+    <div class="field"><label>Nome completo</label><input type="text" id="pix-name" placeholder="Seu nome completo"/></div>
+    <div class="field"><label>E-mail</label><input type="email" id="pix-email" placeholder="seu@email.com" inputmode="email"/></div>
     <div class="field"><label>CPF</label><input type="tel" id="pix-cpf" placeholder="000.000.000-00" maxlength="14" inputmode="numeric"/></div>
     <div class="pix-info">
       <div class="pix-logo">🏦</div>
@@ -133,41 +126,72 @@ header{padding:48px 20px 24px;text-align:center;}
 
 <button class="pay-btn" id="pay-btn" onclick="pay()">
   <span id="btn-text">Assinar agora — R$9,90/mês</span>
-  <div class="loading-spin" id="loading-spin"></div>
+  <div class="spin" id="spin"></div>
 </button>
-<div class="security">🔒 Pagamento 100% seguro · Stripe</div>
+<div class="security">🔒 Pagamento seguro · Stripe</div>
 
 <div class="success-overlay" id="success-overlay">
   <div class="success-modal">
     <div class="success-icon" id="s-icon">🎉</div>
     <div class="success-title" id="s-title">PRO ativado!</div>
-    <div class="success-text" id="s-text">Seu plano foi ativado com sucesso. Bem-vindo ao RotinAI PRO!</div>
+    <div class="success-text" id="s-text">Seu plano foi ativado. Bem-vindo ao RotinAI PRO!</div>
     <button class="success-btn" onclick="window.location.href='index.html'">Abrir o app ↗</button>
   </div>
 </div>
 
 <script>
 const STRIPE_KEY = 'pk_test_51TVK7XPGwLmlpLB6DaPsIhn8m8zDFsHCEwazYZQztaG5VlYSmvZ4eHnf4W31h3SqYPDALF9zxgWW7mB3HmbPp8rg00495MN3Ta';
-let stripe;
-try { stripe = Stripe(STRIPE_KEY); } catch(e) {}
 
-let currentMethod = 'stripe';
+// Inicializar Stripe Elements
+const stripe = Stripe(STRIPE_KEY);
+const elements = stripe.elements({
+  appearance: {
+    theme: 'night',
+    variables: {
+      colorBackground: '#1f1f1f',
+      colorText: '#f5f2ed',
+      colorTextPlaceholder: '#444444',
+      borderRadius: '10px',
+      fontFamily: 'DM Sans, sans-serif',
+      fontSizeBase: '16px',
+    },
+    rules: {
+      '.Input': {
+        border: 'none',
+        boxShadow: 'none',
+        padding: '0',
+        backgroundColor: 'transparent',
+      }
+    }
+  }
+});
 
-// Formatação do cartão
-document.getElementById('card-number').addEventListener('input', function(e) {
-  let v = e.target.value.replace(/\D/g,'').substring(0,16);
-  e.target.value = v.replace(/(.{4})/g,'$1 ').trim();
+// Criar elemento único que tem número, validade e CVV juntos
+const cardElement = elements.create('card', {
+  hidePostalCode: true,
+  style: {
+    base: {
+      color: '#f5f2ed',
+      fontFamily: 'DM Sans, sans-serif',
+      fontSize: '16px',
+      '::placeholder': { color: '#444444' },
+    },
+    invalid: { color: '#ff9090' },
+  }
 });
-document.getElementById('card-expiry').addEventListener('input', function(e) {
-  let v = e.target.value.replace(/\D/g,'').substring(0,4);
-  if(v.length >= 2) v = v.substring(0,2) + '/' + v.substring(2);
-  e.target.value = v;
-});
+
+cardElement.mount('#card-element');
+cardElement.on('focus', () => document.getElementById('card-element').classList.add('focused'));
+cardElement.on('blur',  () => document.getElementById('card-element').classList.remove('focused'));
+
+// CPF mask
 document.getElementById('pix-cpf').addEventListener('input', function(e) {
   let v = e.target.value.replace(/\D/g,'').substring(0,11);
   v = v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
   e.target.value = v;
 });
+
+let currentMethod = 'stripe';
 
 function selectMethod(m) {
   currentMethod = m;
@@ -175,7 +199,9 @@ function selectMethod(m) {
   document.getElementById('m-' + m).classList.add('active');
   document.querySelectorAll('.form-panel').forEach(el => el.classList.remove('active'));
   document.getElementById('panel-' + m).classList.add('active');
-  document.getElementById('btn-text').textContent = m === 'pix' ? 'Gerar QR Code Pix — R$9,90' : 'Assinar agora — R$9,90/mês';
+  document.getElementById('btn-text').textContent = m === 'pix'
+    ? 'Gerar QR Code Pix — R$9,90'
+    : 'Assinar agora — R$9,90/mês';
   hideError();
 }
 
@@ -183,14 +209,13 @@ function showError(msg) {
   const el = document.getElementById('error-box');
   el.textContent = '⚠️ ' + msg;
   el.style.display = 'block';
-  window.scrollTo(0, el.offsetTop - 20);
 }
 function hideError() { document.getElementById('error-box').style.display = 'none'; }
 
 function setLoading(v) {
   document.getElementById('pay-btn').disabled = v;
-  document.getElementById('btn-text').style.display = v ? 'none' : 'block';
-  document.getElementById('loading-spin').style.display = v ? 'block' : 'none';
+  document.getElementById('btn-text').style.display = v ? 'none' : 'inline';
+  document.getElementById('spin').style.display = v ? 'block' : 'none';
 }
 
 async function pay() {
@@ -206,35 +231,19 @@ async function pay() {
 }
 
 async function payStripe() {
-  const name   = document.getElementById('card-name').value.trim();
-  const email  = document.getElementById('card-email').value.trim();
-  const number = document.getElementById('card-number').value.replace(/\s/g,'');
-  const expiry = document.getElementById('card-expiry').value;
-  const cvc    = document.getElementById('card-cvc').value.trim();
+  const name  = document.getElementById('card-name').value.trim();
+  const email = document.getElementById('card-email').value.trim();
+  if (!name) throw new Error('Preencha o nome no cartão.');
+  if (!email) throw new Error('Preencha o e-mail.');
 
-  if (!name || !email || !number || !expiry || !cvc) throw new Error('Preencha todos os campos do cartão.');
-  if (number.length < 13) throw new Error('Número do cartão inválido.');
-  if (!expiry.includes('/')) throw new Error('Validade inválida. Use MM/AA.');
-
-  const [expMonth, expYear] = expiry.split('/');
-
-  if (!stripe) throw new Error('Erro ao carregar o Stripe. Recarregue a página.');
-
-  // Criar PaymentMethod via Stripe.js
   const { paymentMethod, error } = await stripe.createPaymentMethod({
     type: 'card',
-    card: {
-      number,
-      exp_month: parseInt(expMonth),
-      exp_year: parseInt('20' + expYear),
-      cvc,
-    },
+    card: cardElement,
     billing_details: { name, email },
   });
 
   if (error) throw new Error(error.message);
 
-  // Enviar para API
   const res = await fetch('/api/create-subscription', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -244,7 +253,7 @@ async function payStripe() {
   const raw = await res.text();
   let data;
   try { data = JSON.parse(raw); }
-  catch(e) { throw new Error('Erro na API: ' + raw.substring(0,150)); }
+  catch(e) { throw new Error('Erro da API: ' + raw.substring(0, 200)); }
 
   if (!res.ok) throw new Error(data.error || 'Erro no servidor.');
 
@@ -256,7 +265,6 @@ async function payPix() {
   const name  = document.getElementById('pix-name').value.trim();
   const email = document.getElementById('pix-email').value.trim();
   const cpf   = document.getElementById('pix-cpf').value.replace(/\D/g,'');
-
   if (!name || !email || cpf.length < 11) throw new Error('Preencha todos os campos.');
 
   const res = await fetch('/api/create-pix', {
@@ -268,7 +276,7 @@ async function payPix() {
   const raw = await res.text();
   let data;
   try { data = JSON.parse(raw); }
-  catch(e) { throw new Error('Erro na API Pix: ' + raw.substring(0,150)); }
+  catch(e) { throw new Error('Erro da API Pix: ' + raw.substring(0, 200)); }
 
   if (!res.ok) throw new Error(data.error || 'Erro ao gerar Pix.');
 
