@@ -1,4 +1,30 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const https = require('https');
+
+function stripeRequest(path, body, secretKey) {
+  return new Promise((resolve, reject) => {
+    const postData = Object.entries(body)
+      .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+      .join('&');
+    const options = {
+      hostname: 'api.stripe.com',
+      path,
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + Buffer.from(secretKey + ':').toString('base64'),
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': Buffer.byteLength(postData),
+      },
+    };
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => resolve({ status: res.statusCode, body: JSON.parse(data) }));
+    });
+    req.on('error', reject);
+    req.write(postData);
+    req.end();
+  });
+}
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -7,46 +33,41 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método não permitido' });
 
+  const SECRET = process.env.STRIPE_SECRET_KEY;
+  const PRICE  = process.env.STRIPE_PRICE_ID;
+
+  if (!SECRET || !PRICE) {
+    return res.status(500).json({ error: 'Chaves não configuradas no Vercel' });
+  }
+
   try {
     const { paymentMethodId, email, name } = req.body;
     if (!paymentMethodId || !email || !name) {
       return res.status(400).json({ error: 'Dados incompletos' });
     }
 
-    const customers = await stripe.customers.list({ email, limit: 1 });
-    let customer;
-    if (customers.data.length > 0) {
-      customer = customers.data[0];
-      await stripe.paymentMethods.attach(paymentMethodId, { customer: customer.id });
-    } else {
-      customer = await stripe.customers.create({
-        email, name, payment_method: paymentMethodId,
-      });
-    }
+    // 1. Criar cliente
+    const { body: customer } = await stripeRequest('/v1/customers', {
+      email, name, payment_method: paymentMethodId,
+      'invoice_settings[default_payment_method]': paymentMethodId,
+    }, SECRET);
 
-    await stripe.customers.update(customer.id, {
-      invoice_settings: { default_payment_method: paymentMethodId },
-    });
+    if (customer.error) throw new Error(customer.error.message);
 
-    const subscription = await stripe.subscriptions.create({
+    // 2. Criar assinatura
+    const { body: subscription } = await stripeRequest('/v1/subscriptions', {
       customer: customer.id,
-      items: [{ price: process.env.STRIPE_PRICE_ID }],
-      payment_settings: {
-        payment_method_types: ['card'],
-        save_default_payment_method: 'on_subscription',
-      },
-      expand: ['latest_invoice.payment_intent'],
-    });
+      'items[0][price]': PRICE,
+      'payment_settings[payment_method_types][0]': 'card',
+      'payment_settings[save_default_payment_method]': 'on_subscription',
+      expand: 'latest_invoice.payment_intent',
+    }, SECRET);
 
-    const paymentIntent = subscription.latest_invoice.payment_intent;
-    if (paymentIntent && paymentIntent.status === 'requires_action') {
-      return res.json({ clientSecret: paymentIntent.client_secret });
-    }
+    if (subscription.error) throw new Error(subscription.error.message);
 
     return res.json({ success: true, subscriptionId: subscription.id });
 
   } catch (err) {
-    console.error('Stripe error:', err);
     return res.status(500).json({ error: err.message });
   }
 };
