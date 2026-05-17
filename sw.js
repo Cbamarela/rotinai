@@ -1,5 +1,5 @@
-var CACHE = 'rotinai-v1';
-var ASSETS = ['/', '/index.html', '/manifest.json'];
+var CACHE = 'rotinai-v3';
+var ASSETS = ['/', '/index.html', '/manifest.json', '/landing.html'];
 
 self.addEventListener('install', function(e) {
   e.waitUntil(
@@ -22,11 +22,14 @@ self.addEventListener('activate', function(e) {
 });
 
 self.addEventListener('fetch', function(e) {
+  // Nunca cachear a página de assinatura e APIs
+  if (e.request.url.includes('/assinar') || e.request.url.includes('/api/')) {
+    e.respondWith(fetch(e.request));
+    return;
+  }
   e.respondWith(
     caches.match(e.request).then(function(cached) {
-      return cached || fetch(e.request).catch(function() {
-        return caches.match('/index.html');
-      });
+      return cached || fetch(e.request);
     })
   );
 });
