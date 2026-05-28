@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<meta name="theme-color" content="#0d0d0d"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<title>RotinAI — Assinar PRO</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script>
+// Cache-busting automatico — sempre carrega versao mais recente
+if (window.location.search.indexOf('nocache=') === -1) {
+  window.location.replace('/assinar.html?nocache=' + Date.now());
+}
+</script>
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+:root{--bg:#0d0d0d;--bg2:#161616;--bg3:#1f1f1f;--border:#2a2a2a;--border2:#333;--text:#f5f2ed;--text2:#888;--text3:#444;--accent:#c8f060;--gold:#e8c840;--r:16px;--r-sm:10px;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;}
+body{max-width:420px;margin:0 auto;padding:0 0 48px;}
+header{padding:48px 20px 24px;text-align:center;}
+.logo{font-family:'Fraunces',serif;font-size:28px;font-weight:300;letter-spacing:-1px;}
+.logo span{color:var(--accent);}
+.plan-card{margin:0 20px 20px;background:linear-gradient(135deg,#1a2a0a,#0d1a0d);border:1px solid #c8f06044;border-radius:var(--r);padding:20px;text-align:center;}
+.plan-badge{display:inline-block;background:#c8f06022;border:1px solid #c8f06055;color:var(--accent);font-family:'DM Mono',monospace;font-size:10px;padding:3px 12px;border-radius:99px;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.plan-price{font-family:'Fraunces',serif;font-size:52px;font-weight:300;letter-spacing:-2px;color:var(--accent);line-height:1;}
+.plan-price sub{font-size:16px;color:var(--text2);}
+.plan-desc{font-size:13px;color:var(--text2);margin:8px 0 16px;}
+.features{display:flex;flex-direction:column;gap:8px;text-align:left;}
+.feature{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text2);}
+.feature-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+.section-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:0 20px;margin-bottom:10px;}
+.methods{padding:0 20px;margin-bottom:20px;}
+.method-option{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .2s;}
+.method-option.active{border-color:#c8f06066;background:#c8f06008;}
+.method-radio{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.method-option.active .method-radio{border-color:var(--accent);}
+.method-radio-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:none;}
+.method-option.active .method-radio-dot{display:block;}
+.method-info{flex:1;}
+.method-name{font-size:14px;font-weight:500;margin-bottom:2px;}
+.method-desc{font-size:11px;color:var(--text2);}
+.method-icon{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:10px;font-family:'DM Mono',monospace;color:var(--text2);}
+.form-wrap{padding:0 20px;margin-bottom:20px;}
+.form-panel{display:none;}
+.form-panel.active{display:block;}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.field label{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;}
+.field input{height:52px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;padding:0 14px;outline:none;-webkit-appearance:none;}
+.field input:focus{border-color:var(--accent);}
+.field input::placeholder{color:var(--text3);}
+.stripe-el{height:52px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--r-sm);padding:15px 14px;transition:border-color .2s;}
+.stripe-el.focused{border-color:var(--accent);}
+.pix-info{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:16px;text-align:center;margin-bottom:12px;}
+.pix-logo{font-size:32px;margin-bottom:8px;}
+.pix-desc{font-size:13px;color:var(--text2);line-height:1.5;}
+.pix-steps{display:flex;flex-direction:column;gap:8px;margin-top:12px;text-align:left;}
+.pix-step{display:flex;gap:10px;font-size:12px;color:var(--text2);}
+.pix-num{width:20px;height:20px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'DM Mono',monospace;}
+.pay-btn{width:calc(100% - 40px);margin:0 20px;height:56px;border-radius:var(--r);border:none;background:var(--accent);color:#0d0d0d;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.pay-btn:active{opacity:.85;}
+.pay-btn:disabled{opacity:.5;cursor:default;}
+.security{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:var(--text3);margin-top:12px;font-family:'DM Mono',monospace;}
+.error-box{background:#ff5c5c18;border:1px solid #ff5c5c44;border-radius:var(--r-sm);padding:12px 14px;margin:0 20px 16px;font-size:13px;color:#ff9090;display:none;line-height:1.5;}
+.spin{width:20px;height:20px;border:2px solid #0d0d0d55;border-top-color:#0d0d0d;border-radius:50%;animation:sp .7s linear infinite;display:none;}
+@keyframes sp{to{transform:rotate(360deg)}}
+.success-overlay{display:none;position:fixed;inset:0;background:#000c;z-index:999;align-items:center;justify-content:center;padding:20px;}
+.success-overlay.open{display:flex;}
+.success-modal{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:32px 24px;width:100%;max-width:380px;text-align:center;}
+.success-icon{font-size:48px;margin-bottom:16px;}
+.success-title{font-family:'Fraunces',serif;font-size:24px;font-weight:300;color:var(--accent);margin-bottom:8px;}
+.success-text{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;}
+.success-btn{width:100%;height:48px;border-radius:var(--r-sm);border:none;background:var(--accent);color:#0d0d0d;font-size:15px;font-weight:500;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<header><div class="logo">Rotin<span>AI</span></div></header>
+
+<div class="plan-card">
+  <div class="plan-badge">✦ plano pro</div>
+  <div class="plan-price">R$9<span style="font-size:32px">,90</span><sub>/mês</sub></div>
+  <div class="plan-desc">Cancele quando quiser · Sem fidelidade</div>
+  <div class="features">
+    <div class="feature"><div class="feature-dot"></div>Tarefas e hábitos ilimitados</div>
+    <div class="feature"><div class="feature-dot"></div>IA organiza sua rotina todo dia</div>
+    <div class="feature"><div class="feature-dot"></div>Relatório semanal de produtividade</div>
+    <div class="feature"><div class="feature-dot"></div>Suporte prioritário</div>
+  </div>
+</div>
+
+<div class="error-box" id="error-box"></div>
+
+<div class="section-title">Forma de pagamento</div>
+<div class="methods">
+  <div class="method-option active" id="m-stripe" onclick="selectMethod('stripe')">
+    <div class="method-radio"><div class="method-radio-dot"></div></div>
+    <div class="method-info"><div class="method-name">Cartão de crédito</div><div class="method-desc">Visa, Mastercard, Elo, Amex</div></div>
+    <span class="method-icon">VISA</span>
+  </div>
+  <div class="method-option" id="m-pix" onclick="selectMethod('pix')">
+    <div class="method-radio"><div class="method-radio-dot"></div></div>
+    <div class="method-info"><div class="method-name">Pix</div><div class="method-desc">Aprovação imediata</div></div>
+    <span class="method-icon" style="color:#00b4d8">PIX</span>
+  </div>
+</div>
+
+<div class="form-wrap">
+  <div class="form-panel active" id="panel-stripe">
+    <div class="field"><label>Nome no cartão</label><input type="text" id="card-name" placeholder="Como está no cartão" autocomplete="cc-name"/></div>
+    <div class="field"><label>E-mail</label><input type="email" id="card-email" placeholder="seu@email.com" inputmode="email"/></div>
+    <div class="field"><label>Dados do cartão</label><div class="stripe-el" id="card-element"></div></div>
+  </div>
+  <div class="form-panel" id="panel-pix">
+    <div class="field"><label>Nome completo</label><input type="text" id="pix-name" placeholder="Seu nome completo"/></div>
+    <div class="field"><label>E-mail</label><input type="email" id="pix-email" placeholder="seu@email.com" inputmode="email"/></div>
+    <div class="field"><label>CPF</label><input type="tel" id="pix-cpf" placeholder="000.000.000-00" maxlength="14" inputmode="numeric"/></div>
+    <div class="pix-info">
+      <div class="pix-logo">🏦</div>
+      <div class="pix-desc">Você receberá um QR Code Pix para pagar R$9,90. Ativação imediata após o pagamento.</div>
+      <div class="pix-steps">
+        <div class="pix-step"><div class="pix-num">1</div>Clique em "Assinar agora"</div>
+        <div class="pix-step"><div class="pix-num">2</div>Escaneie o QR Code com seu banco</div>
+        <div class="pix-step"><div class="pix-num">3</div>PRO ativado em segundos</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="pay-btn" id="pay-btn" onclick="pay()">
+  <span id="btn-text">Assinar agora — R$9,90/mês</span>
+  <div class="spin" id="spin"></div>
+</button>
+<div class="security">🔒 Pagamento seguro · Stripe</div>
+
+<div class="success-overlay" id="success-overlay">
+  <div class="success-modal">
+    <div class="success-icon" id="s-icon">🎉</div>
+    <div class="success-title" id="s-title">PRO ativado!</div>
+    <div class="success-text" id="s-text">Seu plano foi ativado. Bem-vindo ao RotinAI PRO!</div>
+    <button class="success-btn" onclick="window.location.href='index.html'">Abrir o app ↗</button>
+  </div>
+</div>
+
+<script>
+const STRIPE_KEY = 'pk_test_51TVK7XPGwLmlpLB6DaPsIhn8m8zDFsHCEwazYZQztaG5VlYSmvZ4eHnf4W31h3SqYPDALF9zxgWW7mB3HmbPp8rg00495MN3Ta';
+
+const stripe = Stripe(STRIPE_KEY);
+const elements = stripe.elements({
+  appearance: {
+    theme: 'night',
+    variables: {
+      colorBackground: '#1f1f1f',
+      colorText: '#f5f2ed',
+      colorTextPlaceholder: '#444444',
+      borderRadius: '10px',
+      fontFamily: 'DM Sans, sans-serif',
+      fontSizeBase: '16px',
+    }
+  }
+});
+
+const cardElement = elements.create('card', {
+  hidePostalCode: true,
+  style: {
+    base: {
+      color: '#f5f2ed',
+      fontFamily: 'DM Sans, sans-serif',
+      fontSize: '16px',
+      '::placeholder': { color: '#444444' },
+    },
+    invalid: { color: '#ff9090' },
+  }
+});
+
+cardElement.mount('#card-element');
+cardElement.on('focus', () => document.getElementById('card-element').classList.add('focused'));
+cardElement.on('blur',  () => document.getElementById('card-element').classList.remove('focused'));
+
+document.getElementById('pix-cpf').addEventListener('input', function(e) {
+  let v = e.target.value.replace(/\D/g,'').substring(0,11);
+  v = v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+  e.target.value = v;
+});
+
+let currentMethod = 'stripe';
+
+function selectMethod(m) {
+  currentMethod = m;
+  document.querySelectorAll('.method-option').forEach(el => el.classList.remove('active'));
+  document.getElementById('m-' + m).classList.add('active');
+  document.querySelectorAll('.form-panel').forEach(el => el.classList.remove('active'));
+  document.getElementById('panel-' + m).classList.add('active');
+  document.getElementById('btn-text').textContent = m === 'pix'
+    ? 'Gerar QR Code Pix — R$9,90'
+    : 'Assinar agora — R$9,90/mês';
+  hideError();
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-box');
+  el.textContent = 'Erro: ' + msg;
+  el.style.display = 'block';
+}
+function hideError() { document.getElementById('error-box').style.display = 'none'; }
+
+function setLoading(v) {
+  document.getElementById('pay-btn').disabled = v;
+  document.getElementById('btn-text').style.display = v ? 'none' : 'inline';
+  document.getElementById('spin').style.display = v ? 'block' : 'none';
+}
+
+async function pay() {
+  hideError();
+  setLoading(true);
+  try {
+    if (currentMethod === 'stripe') await payStripe();
+    else await payPix();
+  } catch(e) {
+    showError(e.message || 'Tente novamente.');
+  }
+  setLoading(false);
+}
+
+async function payStripe() {
+  const name  = document.getElementById('card-name').value.trim();
+  const email = document.getElementById('card-email').value.trim();
+  if (!name) throw new Error('Preencha o nome no cartão.');
+  if (!email) throw new Error('Preencha o e-mail.');
+
+  const { paymentMethod, error } = await stripe.createPaymentMethod({
+    type: 'card',
+    card: cardElement,
+    billing_details: { name, email },
+  });
+
+  if (error) throw new Error(error.message);
+
+  const res = await fetch('/api/create-subscription', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ paymentMethodId: paymentMethod.id, email, name }),
+  });
+
+  const raw = await res.text();
+  let data;
+  try { data = JSON.parse(raw); }
+  catch(e) { throw new Error('Erro da API: ' + raw.substring(0, 200)); }
+
+  if (!res.ok) throw new Error(data.error || 'Erro no servidor.');
+
+  localStorage.setItem('rotinai-pro', '1');
+  showSuccess('🎉', 'PRO ativado!', 'Seu plano foi ativado com sucesso. Bem-vindo ao RotinAI PRO!');
+}
+
+async function payPix() {
+  const name  = document.getElementById('pix-name').value.trim();
+  const email = document.getElementById('pix-email').value.trim();
+  const cpf   = document.getElementById('pix-cpf').value.replace(/\D/g,'');
+  if (!name || !email || cpf.length < 11) throw new Error('Preencha todos os campos.');
+
+  const res = await fetch('/api/create-pix', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, cpf }),
+  });
+
+  const raw = await res.text();
+  let data;
+  try { data = JSON.parse(raw); }
+  catch(e) { throw new Error('Erro da API Pix: ' + raw.substring(0, 200)); }
+
+  if (!res.ok) throw new Error(data.error || 'Erro ao gerar Pix.');
+
+  showSuccess('📲', 'QR Code gerado!',
+    '<img src="data:image/png;base64,' + data.qr_code_base64 + '" style="width:180px;height:180px;border-radius:8px;display:block;margin:0 auto 12px"/><br>Escaneie com seu banco. PRO ativado após o pagamento.'
+  );
+}
+
+function showSuccess(icon, title, text) {
+  document.getElementById('s-icon').textContent = icon;
+  document.getElementById('s-title').textContent = title;
+  document.getElementById('s-text').innerHTML = text;
+  document.getElementById('success-overlay').classList.add('open');
+}
+</script>
+</body>
+</html>
