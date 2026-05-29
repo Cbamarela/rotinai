@@ -4,11 +4,20 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <meta name="theme-color" content="#0d0d0d"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
 <title>RotinAI — Assinar PRO</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script>
+// Cache-busting automatico — sempre carrega versao mais recente
+if (window.location.search.indexOf('nocache=') === -1) {
+  window.location.replace('/assinar.html?nocache=' + Date.now());
+}
+</script>
 <script src="https://js.stripe.com/v3/"></script>
 <style>
-:root{--bg:#0d0d0d;--bg2:#161616;--bg3:#1f1f1f;--border:#2a2a2a;--border2:#333;--text:#f5f2ed;--text2:#888;--text3:#444;--accent:#c8f060;--r:16px;--r-sm:10px;}
+:root{--bg:#0d0d0d;--bg2:#161616;--bg3:#1f1f1f;--border:#2a2a2a;--border2:#333;--text:#f5f2ed;--text2:#888;--text3:#444;--accent:#c8f060;--gold:#e8c840;--r:16px;--r-sm:10px;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;}
 body{max-width:420px;margin:0 auto;padding:0 0 48px;}
@@ -43,8 +52,6 @@ header{padding:48px 20px 24px;text-align:center;}
 .field input{height:52px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;padding:0 14px;outline:none;-webkit-appearance:none;}
 .field input:focus{border-color:var(--accent);}
 .field input::placeholder{color:var(--text3);}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-/* Stripe Element container */
 .stripe-el{height:52px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--r-sm);padding:15px 14px;transition:border-color .2s;}
 .stripe-el.focused{border-color:var(--accent);}
 .pix-info{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:16px;text-align:center;margin-bottom:12px;}
@@ -107,7 +114,6 @@ header{padding:48px 20px 24px;text-align:center;}
     <div class="field"><label>E-mail</label><input type="email" id="card-email" placeholder="seu@email.com" inputmode="email"/></div>
     <div class="field"><label>Dados do cartão</label><div class="stripe-el" id="card-element"></div></div>
   </div>
-
   <div class="form-panel" id="panel-pix">
     <div class="field"><label>Nome completo</label><input type="text" id="pix-name" placeholder="Seu nome completo"/></div>
     <div class="field"><label>E-mail</label><input type="email" id="pix-email" placeholder="seu@email.com" inputmode="email"/></div>
@@ -142,7 +148,6 @@ header{padding:48px 20px 24px;text-align:center;}
 <script>
 const STRIPE_KEY = 'pk_test_51TVK7XPGwLmlpLB6DaPsIhn8m8zDFsHCEwazYZQztaG5VlYSmvZ4eHnf4W31h3SqYPDALF9zxgWW7mB3HmbPp8rg00495MN3Ta';
 
-// Inicializar Stripe Elements
 const stripe = Stripe(STRIPE_KEY);
 const elements = stripe.elements({
   appearance: {
@@ -154,19 +159,10 @@ const elements = stripe.elements({
       borderRadius: '10px',
       fontFamily: 'DM Sans, sans-serif',
       fontSizeBase: '16px',
-    },
-    rules: {
-      '.Input': {
-        border: 'none',
-        boxShadow: 'none',
-        padding: '0',
-        backgroundColor: 'transparent',
-      }
     }
   }
 });
 
-// Criar elemento único que tem número, validade e CVV juntos
 const cardElement = elements.create('card', {
   hidePostalCode: true,
   style: {
@@ -184,7 +180,6 @@ cardElement.mount('#card-element');
 cardElement.on('focus', () => document.getElementById('card-element').classList.add('focused'));
 cardElement.on('blur',  () => document.getElementById('card-element').classList.remove('focused'));
 
-// CPF mask
 document.getElementById('pix-cpf').addEventListener('input', function(e) {
   let v = e.target.value.replace(/\D/g,'').substring(0,11);
   v = v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
@@ -207,7 +202,7 @@ function selectMethod(m) {
 
 function showError(msg) {
   const el = document.getElementById('error-box');
-  el.textContent = '⚠️ ' + msg;
+  el.textContent = 'Erro: ' + msg;
   el.style.display = 'block';
 }
 function hideError() { document.getElementById('error-box').style.display = 'none'; }
@@ -225,7 +220,7 @@ async function pay() {
     if (currentMethod === 'stripe') await payStripe();
     else await payPix();
   } catch(e) {
-    showError(e.message || 'Erro inesperado. Tente novamente.');
+    showError(e.message || 'Tente novamente.');
   }
   setLoading(false);
 }
@@ -281,7 +276,7 @@ async function payPix() {
   if (!res.ok) throw new Error(data.error || 'Erro ao gerar Pix.');
 
   showSuccess('📲', 'QR Code gerado!',
-    `<img src="data:image/png;base64,${data.qr_code_base64}" style="width:180px;height:180px;border-radius:8px;display:block;margin:0 auto 12px"/><br>Escaneie com seu banco. PRO ativado após o pagamento.`
+    '<img src="data:image/png;base64,' + data.qr_code_base64 + '" style="width:180px;height:180px;border-radius:8px;display:block;margin:0 auto 12px"/><br>Escaneie com seu banco. PRO ativado após o pagamento.'
   );
 }
 
